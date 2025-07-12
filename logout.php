@@ -1,10 +1,10 @@
 <?php
 /**
  * ==========================================
- * DENTIST LOGOUT SCRIPT
+ * ADMIN LOGOUT SCRIPT
  * ==========================================
  * 
- * This script handles logging out a dentist by destroying their session
+ * This script handles logging out an administrator by destroying their session
  * and redirecting them to the login page.
  */
 

@@ -1,6 +1,47 @@
-// Enhanced JavaScript for Patient Module
-
+// Enhanced JavaScript for Admin Module
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('Admin JavaScript loaded successfully!');
+    
+    // Delete confirmation for all elements with class 'delete-btn'
+    document.querySelectorAll('.delete-btn').forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+            if (!confirm('Are you sure you want to delete this?')) {
+                e.preventDefault();
+            }
+        });
+    });
+
+    // Form validation for add_user.php
+    const addUserForm = document.querySelector('form[method="POST"]');
+    if (addUserForm) {
+        addUserForm.addEventListener('submit', function(e) {
+            const password = document.querySelector('input[name="password"]');
+            const confirmPassword = document.querySelector('input[name="confirm_password"]');
+            
+            if (password && confirmPassword) {
+                if (password.value !== confirmPassword.value) {
+                    e.preventDefault();
+                    alert('Passwords do not match!');
+                    return false;
+                }
+                
+                if (password.value.length < 6) {
+                    e.preventDefault();
+                    alert('Password must be at least 6 characters long!');
+                    return false;
+                }
+            }
+        });
+    }
+
+    // Table filtering for activity_logs.php
+    const searchInput = document.querySelector('input[name="search"]');
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            console.log('Search input detected:', this.value);
+        });
+    }
+
     // Password toggle functionality
     const passwordFields = document.querySelectorAll('input[type="password"]');
     passwordFields.forEach(function(field) {
@@ -21,29 +62,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 toggleBtn.textContent = '👁️';
             }
         });
+        
         field.parentNode.insertBefore(toggleBtn, field.nextSibling);
     });
-
-    // Form validation for login
-    const loginForm = document.querySelector('form[method="POST"]');
-    if (loginForm) {
-        loginForm.addEventListener('submit', function(e) {
-            const email = document.querySelector('input[name="email"]');
-            const password = document.querySelector('input[name="password"]');
-            if (email && password) {
-                if (!email.value.includes('@')) {
-                    e.preventDefault();
-                    alert('Please enter a valid email address.');
-                    return false;
-                }
-                if (password.value.length < 6) {
-                    e.preventDefault();
-                    alert('Password must be at least 6 characters long!');
-                    return false;
-                }
-            }
-        });
-    }
 
     // Success message auto-hide
     const successMessages = document.querySelectorAll('.success');
@@ -52,4 +73,6 @@ document.addEventListener('DOMContentLoaded', function() {
             msg.style.opacity = '0.7';
         }, 3000);
     });
-}); 
+
+    console.log('All JavaScript features initialized!');
+});

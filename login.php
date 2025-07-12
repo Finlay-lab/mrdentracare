@@ -1,17 +1,17 @@
 <?php
 /**
  * ==========================================
- * DENTIST LOGIN PAGE
+ * ADMIN LOGIN PAGE
  * ==========================================
  * 
- * This file handles dentist authentication and login functionality.
- * It validates dentist credentials against the database and creates
- * a session for authenticated dentists.
+ * This file handles administrator authentication and login functionality.
+ * It validates admin credentials against the database and creates
+ * a session for authenticated administrators.
  * 
  * Features:
  * - Email and password validation
  * - Secure password verification using password_verify()
- * - Session management for logged-in dentists
+ * - Session management for logged-in administrators
  * - Error handling and user feedback
  */
 
@@ -37,7 +37,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $errors[] = "Both fields are required.";
     } else {
         // Prepare SQL statement to prevent SQL injection
-        $stmt = $conn->prepare("SELECT id, name, password FROM dentists WHERE email = ?");
+        $stmt = $conn->prepare("SELECT id, name, password FROM admins WHERE email = ?");
         if (!$stmt) {
             die("Prepare failed: (" . $conn->errno . ") " . $conn->error);
         }
@@ -47,9 +47,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->execute();
         $stmt->store_result();
 
-        // Check if dentist exists in database
+        // Check if admin exists in database
         if ($stmt->num_rows == 1) {
-            // Bind result variables to fetch dentist data
+            // Bind result variables to fetch admin data
             $stmt->bind_result($id, $name, $hashed_password);
             $stmt->fetch();
             
@@ -59,11 +59,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 // LOGIN SUCCESSFUL - Create session
                 // ==========================================
                 
-                // Store dentist information in session variables
-                $_SESSION['dentist_id'] = $id;
-                $_SESSION['dentist_name'] = $name;
+                // Store admin information in session variables
+                $_SESSION['admin_id'] = $id;
+                $_SESSION['admin_name'] = $name;
                 
-                // Redirect to dentist dashboard
+                // Redirect to admin dashboard
                 header("Location: dashboard.php");
                 exit();
             } else {
@@ -71,7 +71,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $errors[] = "Incorrect password.";
             }
         } else {
-            // No dentist found with provided email
+            // No admin found with provided email
             $errors[] = "No account found with that email.";
         }
         
@@ -85,76 +85,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <html>
 <head>
     <!-- Page title and meta information -->
-    <title>Dentist Login</title>
+    <title>Admin Login</title>
     
     <!-- External CSS files for styling -->
     <link rel="stylesheet" href="../patient/assets/css/style.css">
     <link rel="stylesheet" href="../patient/assets/css/logo.css">
-    
-    <!-- Custom styling for dentist login page -->
-    <style>
-        /* ==========================================
-        DENTIST LOGIN CONTAINER STYLING
-        ========================================== */
-        .dentist-login-container {
-            max-width: 400px;
-            margin: 60px auto;
-            background: #fff;
-            border-radius: 14px;
-            box-shadow: 0 4px 24px rgba(0,0,0,0.07);
-            padding: 36px 32px;
-        }
-        
-        .dentist-login-container h2 {
-            color: #00897b; /* Teal color for dentist theme */
-            text-align: center;
-            margin-bottom: 28px;
-        }
-        
-        .dentist-login-container label {
-            display: block;
-            margin-top: 18px;
-            font-weight: 500;
-        }
-        
-        .dentist-login-container input[type="email"],
-        .dentist-login-container input[type="password"] {
-            width: 100%;
-            padding: 8px 10px;
-            margin-top: 6px;
-            border: 1px solid #bdbdbd;
-            border-radius: 6px;
-            font-size: 1rem;
-        }
-        
-        .dentist-login-container button[type="submit"] {
-            margin-top: 28px;
-            width: 100%;
-            padding: 10px 0;
-            background: #00897b; /* Teal background */
-            color: #fff;
-            border: none;
-            border-radius: 6px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-        
-        .dentist-login-container button[type="submit"]:hover {
-            background: #00695c; /* Darker teal on hover */
-        }
-        
-        /* Error message styling */
-        .error {
-            background: #ffebee;
-            color: #c62828;
-            padding: 10px 16px;
-            border-radius: 6px;
-            margin-bottom: 16px;
-            text-align: center;
-        }
-    </style>
 </head>
 <body>
     <!-- ==========================================
@@ -171,28 +106,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
     
     <!-- ==========================================
-    DENTIST LOGIN FORM CONTAINER
+    MAIN LOGIN FORM CONTAINER
     ========================================== -->
-    <div class="dentist-login-container">
-        <h2>Dentist Login</h2>
+    <div class="container">
+        <h2>Admin Login</h2>
         
         <!-- Display error messages if any -->
         <?php
         if (!empty($errors)) {
-            echo "<div class='error'>" . implode("<br>", array_map('htmlspecialchars', $errors)) . "</div>";
+            echo "<div class='error'>" . implode("<br>", $errors) . "</div>";
         }
         ?>
         
         <!-- Login form with POST method -->
         <form method="POST" action="">
             <label>Email:</label>
-            <input type="email" name="email" required>
+            <input type="email" name="email" required><br>
             
             <label>Password:</label>
-            <input type="password" name="password" required>
+            <input type="password" name="password" required><br>
             
             <button type="submit">Login</button>
         </form>
     </div>
+    
+    <!-- JavaScript file for additional functionality -->
+    <script src="assets/js/global.js"></script>
 </body>
 </html>
